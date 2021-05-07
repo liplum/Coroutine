@@ -6,19 +6,19 @@ import net.liplum.enumerator.IEnumerator;
 import java.util.LinkedList;
 
 public final class CoroutineManager {
-    private static CoroutineManager _instance = null;
+    private static CoroutineManager instance = null;
 
     public static CoroutineManager Instance() {
-        if (_instance == null) {
-            _instance = new CoroutineManager();
+        if (instance == null) {
+            instance = new CoroutineManager();
         }
-        return _instance;
+        return instance;
     }
 
     private CoroutineManager() {
     }
 
-    private final LinkedList<Coroutine> _coroutineList = new LinkedList<>();
+    private final LinkedList<Coroutine> coroutinesList = new LinkedList<>();
 
     public Coroutine startCoroutine(IEnumerable task) {
         Coroutine c = new Coroutine(task);
@@ -33,17 +33,17 @@ public final class CoroutineManager {
     }
 
     public Coroutine startCoroutine(Coroutine task) {
-        _coroutineList.addLast(task);
+        coroutinesList.addLast(task);
         return task;
     }
 
     public void StopCoroutine(Coroutine coroutine) {
-        _coroutineList.remove(coroutine);
+        coroutinesList.remove(coroutine);
     }
 
     public void OnTick() {
         LinkedList<Coroutine> needRemoves = new LinkedList<>();
-        for (Coroutine c : _coroutineList) {
+        for (Coroutine c : coroutinesList) {
             c.onTick();
             if (c.isDead()) {
                 needRemoves.addLast(c);
@@ -69,7 +69,7 @@ public final class CoroutineManager {
             }
         }
         for (Coroutine needRemove : needRemoves) {
-            _coroutineList.remove(needRemove);
+            coroutinesList.remove(needRemove);
         }
     }
 }

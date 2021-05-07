@@ -3,7 +3,7 @@ package net.liplum.coroutine;
 public class WaitForNextTick implements IWaitable{
     private int tick = 2;
     @Override
-    public void OnTick() {
+    public void onTick() {
         tick--;
     }
 

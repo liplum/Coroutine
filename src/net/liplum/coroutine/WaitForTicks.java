@@ -8,7 +8,7 @@ public final class WaitForTicks implements IWaitable {
     }
 
     @Override
-    public void OnTick() {
+    public void onTick() {
         tick--;
     }
 

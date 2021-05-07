@@ -18,38 +18,57 @@ public final class CoroutineManager {
     private CoroutineManager() {
     }
 
-    private final LinkedList<IEnumerable> _coroutineList = new LinkedList<>();
+    private final LinkedList<Coroutine> _coroutineList = new LinkedList<>();
 
-    public void startCoroutine(IEnumerable i) {
-        _coroutineList.addLast(i);
+    public Coroutine startCoroutine(IEnumerable task) {
+        Coroutine c = new Coroutine(task);
+        startCoroutine(c);
+        return c;
     }
 
-    public void StopCoroutine(IEnumerable i) {
-        _coroutineList.remove(i);
+    public Coroutine startCoroutine(IEnumerable task, int lifeSpan) {
+        Coroutine c = new Coroutine(task, lifeSpan);
+        startCoroutine(c);
+        return c;
+    }
+
+    public Coroutine startCoroutine(Coroutine task) {
+        _coroutineList.addLast(task);
+        return task;
+    }
+
+    public void StopCoroutine(Coroutine coroutine) {
+        _coroutineList.remove(coroutine);
     }
 
     public void OnTick() {
-        LinkedList<IEnumerable> needRemoves = new LinkedList<>();
-        for (IEnumerable ie : _coroutineList) {
-
-            boolean hasRest = true;
-            IEnumerator ier = ie.getEnumerator();
-            Object currentResult = ier.getCurrent();
-            if (currentResult instanceof IWaitable) {
-                IWaitable wait = (IWaitable) currentResult;
-                wait.OnTick();
-                if (wait.isFinished()) {
+        LinkedList<Coroutine> needRemoves = new LinkedList<>();
+        for (Coroutine c : _coroutineList) {
+            c.onTick();
+            if (c.isDead()) {
+                needRemoves.addLast(c);
+            }
+            else {
+                boolean hasRest = true;
+                IEnumerable ie = c.getTask();
+                IEnumerator ier = ie.getEnumerator();
+                Object currentResult = ier.getCurrent();
+                if (currentResult instanceof IWaitable) {
+                    IWaitable wait = (IWaitable) currentResult;
+                    wait.onTick();
+                    if (wait.isFinished()) {
+                        hasRest = ier.MoveNext();
+                    }
+                } else {
                     hasRest = ier.MoveNext();
                 }
-            }else {
-                hasRest = ier.MoveNext();
-            }
 
-            if (!hasRest) {
-                needRemoves.addLast(ie);
+                if (!hasRest) {
+                    needRemoves.addLast(c);
+                }
             }
         }
-        for (IEnumerable<IWaitable> needRemove : needRemoves) {
+        for (Coroutine needRemove : needRemoves) {
             _coroutineList.remove(needRemove);
         }
     }

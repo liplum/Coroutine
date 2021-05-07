@@ -1,6 +1,6 @@
 package net.liplum.coroutine;
 
 public interface IWaitable {
-    void OnTick();
+    void onTick();
     boolean isFinished();
 }

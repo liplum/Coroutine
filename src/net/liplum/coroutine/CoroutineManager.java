@@ -5,17 +5,8 @@ import net.liplum.enumerator.IEnumerator;
 
 import java.util.LinkedList;
 
-public final class CoroutineManager {
-    private static CoroutineManager instance = null;
-
-    public static CoroutineManager Instance() {
-        if (instance == null) {
-            instance = new CoroutineManager();
-        }
-        return instance;
-    }
-
-    private CoroutineManager() {
+public class CoroutineManager {
+    public CoroutineManager() {
     }
 
     private final LinkedList<Coroutine> coroutinesList = new LinkedList<>();

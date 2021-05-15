@@ -1,7 +1,7 @@
 package net.liplum.coroutine;
 
-public final class WaitForTicks implements IWaitable {
-    private int tick = 0;
+public class WaitForTicks implements IWaitable {
+    private int tick;
 
     public WaitForTicks(int tick) {
         this.tick = tick;

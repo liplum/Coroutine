@@ -1,6 +1,5 @@
 package net.liplum.enumerator;
 
-
 public abstract class Yield<T> implements IEnumerable<T> {
 
     protected abstract void runTask();

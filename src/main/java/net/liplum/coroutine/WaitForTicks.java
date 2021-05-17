@@ -4,7 +4,7 @@ public class WaitForTicks implements IWaitable {
     private int tick;
 
     public WaitForTicks(int tick) {
-        this.tick = tick;
+        this.tick = tick+1;
     }
 
     @Override

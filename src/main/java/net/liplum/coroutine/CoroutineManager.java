@@ -3,7 +3,9 @@ package net.liplum.coroutine;
 import net.liplum.enumerator.IEnumerable;
 import net.liplum.enumerator.IEnumerator;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class CoroutineManager {
     public CoroutineManager() {
@@ -28,6 +30,20 @@ public class CoroutineManager {
         return task;
     }
 
+    public Coroutine[] startCoroutines(Coroutine... coroutines) {
+        Coroutine[] all = new Coroutine[coroutines.length];
+        for (int i = 0; i < coroutines.length; i++) {
+            Coroutine current = coroutines[i];
+            coroutinesList.addLast(current);
+            all[i] = current;
+        }
+        return all;
+    }
+
+    public void stopAll() {
+        coroutinesList.clear();
+    }
+
     public void StopCoroutine(Coroutine coroutine) {
         coroutinesList.remove(coroutine);
     }
@@ -38,8 +54,7 @@ public class CoroutineManager {
             c.onTick();
             if (c.isDead()) {
                 needRemoves.addLast(c);
-            }
-            else {
+            } else {
                 boolean hasRest = true;
                 IEnumerable ie = c.getTask();
                 IEnumerator ier = ie.getEnumerator();
